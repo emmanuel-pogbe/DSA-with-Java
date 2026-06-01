@@ -22,8 +22,19 @@ package stack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class EvaluateReversePolishNotation {
+    public static boolean isInteger(String str) {
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+        // Matches an optional negative/positive sign followed by one or more digits
+        return str.matches("^[+-]?\\d+$");
+    }
+    public static boolean isValidOperator(String str) {
+        return "+*-/".contains(str);
+    }
     public static int performOperation(int operand1, int operand2, String operator) {
         if (operator.equals("+")) return operand1 + operand2;
         if (operator.equals("-")) return operand1 - operand2;
@@ -35,21 +46,26 @@ public class EvaluateReversePolishNotation {
         throw new IllegalArgumentException("Operator not recognized");
     }
     public static int evalRPN(String[] tokens) {
-        List<Integer> operands = new ArrayList<>();
-        for (String character: tokens) {
-            try {
-                operands.add(Integer.parseInt(character));
-            } catch (NumberFormatException e) {
-                int operand2 = operands.removeLast();
-                int operand1 = operands.removeLast();
-                operands.add(performOperation(operand1, operand2, character));
+        int[] operands = new int[tokens.length];
+        int topIndex = -1;
+        for (String token : tokens) {
+            if (!isValidOperator(token)) {
+                topIndex++;
+                operands[topIndex] = Integer.parseInt(token);
+            } else {
+                int operand2 = operands[topIndex];
+                int operand1 = operands[topIndex - 1];
+                int result = performOperation(operand1, operand2, token);
+                topIndex = topIndex - 1;
+                operands[topIndex] = result;
             }
         }
-        return operands.getLast();
+        return operands[0];
     }
 
     public static void main(String[] args) {
         String[] tokens ={ "10","6","9","3","+","-11","*","/","*","17","+","5","+"  };
         System.out.println(evalRPN(tokens));
+
     }
 }
