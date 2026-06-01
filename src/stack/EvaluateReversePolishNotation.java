@@ -20,5 +20,36 @@
 
 package stack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EvaluateReversePolishNotation {
+    public static int performOperation(int operand1, int operand2, String operator) {
+        if (operator.equals("+")) return operand1 + operand2;
+        if (operator.equals("-")) return operand1 - operand2;
+        if (operator.equals("*")) return operand1 * operand2;
+        if (operator.equals("/")) {
+            if (operand2 == 0) throw new ArithmeticException("Can't divide by 0");
+            return operand1 / operand2;
+        }
+        throw new IllegalArgumentException("Operator not recognized");
+    }
+    public static int evalRPN(String[] tokens) {
+        List<Integer> operands = new ArrayList<>();
+        for (String character: tokens) {
+            try {
+                operands.add(Integer.parseInt(character));
+            } catch (NumberFormatException e) {
+                int operand2 = operands.removeLast();
+                int operand1 = operands.removeLast();
+                operands.add(performOperation(operand1, operand2, character));
+            }
+        }
+        return operands.getLast();
+    }
+
+    public static void main(String[] args) {
+        String[] tokens ={ "10","6","9","3","+","-11","*","/","*","17","+","5","+"  };
+        System.out.println(evalRPN(tokens));
+    }
 }
