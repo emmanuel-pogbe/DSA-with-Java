@@ -16,9 +16,12 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        String sentence = "This is a  test";
-        String reversed = reverseSentence(sentence);
+        Integer a = 127;
+        Integer b = 127;
+        System.out.println(a == b); // ?
 
-        System.err.println(reversed);
+        Integer x = 128;
+        Integer y = 128;
+        System.out.println(x == y); // ?
     }
 }
